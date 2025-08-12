@@ -15,12 +15,6 @@ public interface MovimientoRepository extends BaseRepository<Movimiento, String>
 
     List<Movimiento> findAllByProductoId(String idProducto);
 
-    /*
-     * To do - Listar movimientos por:
-     * Usuario, fechaMin y fechaMax, tipo de movimiento, SKU, nombre producto,
-     * cantidad
-     * producto, precio del producto, precio total del movimiento.
-     */
     @Query("""
                 SELECT DISTINCT m
                 FROM Movimiento m
