@@ -22,6 +22,19 @@ import lombok.NoArgsConstructor;
 public class Movimiento extends BaseEntity {
     private String fecha;
     private TipoMovimiento tipo;
+
+    // Indica la cantidad agregada o sustraida, del stock, de un producto en el
+    // movimiento
+    private Integer cantidad;
+
+    /*
+     * Se indica el costo o ingreso en un movimiento según la cantidad del producto
+     * y el tipo de movimiento.
+     * Ej: Si el movimiento es un ajuste, el total se calcula con el precio de
+     * compra del producto.
+     * Al contrario, si el movimiento es una venta, el total se calcula con el
+     * precio de venta del producto.
+     */
     private Float total;
 
     @ManyToOne
