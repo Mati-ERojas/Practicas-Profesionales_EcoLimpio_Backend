@@ -21,6 +21,8 @@ public abstract class BaseEntity implements Serializable {
     @Id
     protected String id;
 
+    protected boolean habilitado = true;
+
     @PrePersist
     public void generateId() {
         if (id == null)

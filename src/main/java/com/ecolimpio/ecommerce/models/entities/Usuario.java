@@ -25,6 +25,4 @@ public class Usuario extends BaseEntity {
     private String password;
     private Rol rol;
     private String fechaCreacion;
-    @Builder.Default
-    private boolean activo = true;
 }
