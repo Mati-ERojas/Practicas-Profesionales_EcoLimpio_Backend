@@ -3,6 +3,8 @@ package com.ecolimpio.ecommerce.models.entities;
 import com.ecolimpio.ecommerce.models.entities.enums.Estado;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -22,6 +24,7 @@ import lombok.NoArgsConstructor;
 public class Venta extends BaseEntity {
     private Integer recibo;
     private String fecha;
+    @Enumerated(EnumType.STRING)
     private Estado estado;
     private Float total;
 

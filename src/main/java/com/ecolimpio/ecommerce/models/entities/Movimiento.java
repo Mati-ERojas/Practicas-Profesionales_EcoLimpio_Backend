@@ -3,6 +3,8 @@ package com.ecolimpio.ecommerce.models.entities;
 import com.ecolimpio.ecommerce.models.entities.enums.TipoMovimiento;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Movimiento extends BaseEntity {
     private String fecha;
+    @Enumerated(EnumType.STRING)
     private TipoMovimiento tipo;
 
     // Indica la cantidad agregada o sustraida, del stock, de un producto en el
