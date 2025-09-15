@@ -58,29 +58,24 @@ public class MovimientoController extends BaseController<Movimiento, String> {
     public ResponseEntity<List<Movimiento>> filtrarPorParametros(
             @RequestParam(required = false) String idUsuario,
             @RequestParam(required = false) String tipoMovimiento,
-            @RequestParam(required = false) String sku,
-            @RequestParam(required = false) String nombreProducto,
-            @RequestParam(required = false) String cantidadProducto,
-            @RequestParam(required = false) String totalMovimiento,
+            @RequestParam(required = false) String skuNombre,
+            @RequestParam(required = false) String totalMovimientoMin,
+            @RequestParam(required = false) String totalMovimientoMax,
             @RequestParam(required = false) String fechaMin,
-            @RequestParam(required = false) String fechaMax,
-            @RequestParam(required = false) String precioProducto/**/)
+            @RequestParam(required = false) String fechaMax)
             throws Exception {
         TipoMovimiento tipoMov = (tipoMovimiento == null || tipoMovimiento.equalsIgnoreCase("null")
                 ? null
                 : TipoMovimiento.valueOf(tipoMovimiento.toUpperCase()));
-        Integer cantidadProduc = (cantidadProducto == null || cantidadProducto.equalsIgnoreCase("null")
+        Float totalMovMin = (totalMovimientoMin == null || totalMovimientoMin.equalsIgnoreCase("null")
                 ? null
-                : Integer.parseInt(cantidadProducto));
-        Float totalMov = (totalMovimiento == null || totalMovimiento.equalsIgnoreCase("null")
+                : Float.parseFloat(totalMovimientoMin));
+        Float totalMovMax = (totalMovimientoMax == null || totalMovimientoMax.equalsIgnoreCase("null")
                 ? null
-                : Float.parseFloat(totalMovimiento));
-        Float precioProduc = (precioProducto == null || precioProducto.equalsIgnoreCase("null")
-                ? null
-                : Float.parseFloat(precioProducto));
+                : Float.parseFloat(totalMovimientoMax));
 
-        List<Movimiento> movimientos = movimientoService.listarPorParametros(idUsuario, tipoMov, sku, nombreProducto,
-                cantidadProduc, totalMov, fechaMin, fechaMax, precioProduc);
+        List<Movimiento> movimientos = movimientoService.listarPorParametros(idUsuario, tipoMov, skuNombre,
+                totalMovMax, totalMovMin, fechaMin, fechaMax);
         return ResponseEntity.ok(movimientos);
     }
 }

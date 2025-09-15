@@ -27,6 +27,12 @@ public class VentaController extends BaseController<Venta, String> {
     @Autowired
     public VentaService ventaService;
 
+    @GetMapping("/abiertas")
+    public ResponseEntity<List<Venta>> listarVentasAbiertas() {
+        List<Venta> ventas = ventaService.listarVentasAbiertas();
+        return ResponseEntity.ok(ventas);
+    }
+
     @PostMapping("/usuarios/{idVenta}")
     public Optional<Venta> agregarVendedor(@RequestBody Usuario usuario, @PathVariable String id) throws Exception {
         Venta venta = ventaService.agregarVendedor(id, usuario);

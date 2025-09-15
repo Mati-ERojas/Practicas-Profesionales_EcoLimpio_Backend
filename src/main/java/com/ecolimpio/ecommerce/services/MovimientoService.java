@@ -76,16 +76,14 @@ public class MovimientoService extends BaseService<Movimiento, String> {
     public List<Movimiento> listarPorParametros(
             String idUsuario,
             TipoMovimiento tipoMovimiento,
-            String sku,
-            String nombreProducto,
-            Integer cantidadProducto,
-            Float totalMovimiento,
+            String skuNombre,
+            Float totalMovMax,
+            Float totalMovMin,
             String fechaMin,
-            String fechaMax,
-            Float precioProducto) throws Exception {
+            String fechaMax) throws Exception {
         try {
-            return movimientoRepository.findAllByParams(idUsuario, tipoMovimiento, sku, nombreProducto,
-                    cantidadProducto, totalMovimiento, fechaMin, fechaMax, precioProducto);
+            return movimientoRepository.findAllByParams(idUsuario, tipoMovimiento, skuNombre,
+                    totalMovMax, totalMovMin, fechaMin, fechaMax);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

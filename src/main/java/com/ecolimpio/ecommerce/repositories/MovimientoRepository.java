@@ -20,25 +20,19 @@ public interface MovimientoRepository extends BaseRepository<Movimiento, String>
                 FROM Movimiento m
                 JOIN m.producto p
                 WHERE (:idUsuario IS NULL OR m.usuario.id = :idUsuario)
+                    AND (:skuNombre IS NULL OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :skuNombre, '%'))
+                        OR LOWER(p.titulo) LIKE LOWER(CONCAT('%', :skuNombre, '%')))
                     AND (:tipoMovimiento IS NULL OR m.tipo = :tipoMovimiento)
-                    AND (:sku IS NULL OR p.sku = :sku)
-                    AND (:nombreProducto IS NULL OR p.titulo = :nombreProducto)
-                    AND (:cantidadProducto IS NULL OR m.cantidad = :cantidadProducto)
-                    AND (:totalMovimiento IS NULL OR m.total = :totalMovimiento)
+                    AND (:totalMovMax IS NULL OR m.total <= :totalMovMax)
+                    AND (:totalMovMin IS NULL OR m.total >= :totalMovMin)
                     AND (:fechaMin IS NULL OR m.fecha >= :fechaMin)
                     AND (:fechaMax IS NULL OR m.fecha <= :fechaMax)
-                    AND (:precioProducto IS NULL OR
-                        (CASE WHEN m.tipo = com.ecolimpio.ecommerce.models.entities.enums.TipoMovimiento.VENTA
-                            THEN p.precioVenta
-                            ELSE p.precioCompra END) = :precioProducto)
             """)
     List<Movimiento> findAllByParams(@Param("idUsuario") String idUsuario,
             @Param("tipoMovimiento") TipoMovimiento tipoMovimiento,
-            @Param("sku") String sku,
-            @Param("nombreProducto") String nombreProducto,
-            @Param("cantidadProducto") Integer cantidadProducto,
-            @Param("totalMovimiento") Float totalMovimiento,
+            @Param("skuNombre") String skuNombre,
+            @Param("totalMovMax") Float totalMovMax,
+            @Param("totalMovMin") Float totalMovMin,
             @Param("fechaMin") String fechaMin,
-            @Param("fechaMax") String fechaMax,
-            @Param("precioProducto") Float precioProducto);
+            @Param("fechaMax") String fechaMax);
 }

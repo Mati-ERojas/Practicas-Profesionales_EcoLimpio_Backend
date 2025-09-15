@@ -110,4 +110,12 @@ public class ProductoService extends BaseService<Producto, String> {
         }
     }
 
+    @Transactional
+    public List<Producto> listarPorBusqueda(String search) throws Exception {
+        try {
+            return productoRepository.findBySearch(search);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ecolimpio.ecommerce.models.entities.CierreCaja;
 import com.ecolimpio.ecommerce.models.entities.Usuario;
 import com.ecolimpio.ecommerce.models.entities.Venta;
+import com.ecolimpio.ecommerce.models.entities.enums.Estado;
 import com.ecolimpio.ecommerce.repositories.VentaRepository;
 
 import jakarta.transaction.Transactional;
@@ -20,6 +21,21 @@ public class VentaService extends BaseService<Venta, String> {
 
     @Autowired
     private VentaRepository ventaRepository;
+
+    @Override
+    @Transactional
+    public Venta create(Venta venta) {
+        if (venta.getRecibo() == null) {
+            Integer ultimoRecibo = ventaRepository.findMaxRecibo();
+            venta.setRecibo(ultimoRecibo + 1);
+        }
+        return ventaRepository.save(venta);
+    }
+
+    @Transactional
+    public List<Venta> listarVentasAbiertas() {
+        return ventaRepository.findByEstado(Estado.ABIERTO);
+    }
 
     @Transactional
     public Venta agregarVendedor(String idVenta, Usuario usuario) throws Exception {

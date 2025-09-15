@@ -28,8 +28,9 @@ public class Producto extends BaseEntity {
     private Float precioCompra;
     private Float precioVenta;
     private String descripcion;
-    private Integer cantidad;
-    private Float porcentajeOferta;
+    private String marca;
+    private Integer stock;
+    private Integer porcentajeOferta;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")

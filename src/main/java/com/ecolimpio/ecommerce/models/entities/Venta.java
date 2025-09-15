@@ -2,6 +2,7 @@ package com.ecolimpio.ecommerce.models.entities;
 
 import com.ecolimpio.ecommerce.models.entities.enums.Estado;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,6 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Venta extends BaseEntity {
+    @Column(unique = true)
     private Integer recibo;
     private String fecha;
     @Enumerated(EnumType.STRING)
