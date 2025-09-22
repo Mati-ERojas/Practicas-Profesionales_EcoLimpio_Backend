@@ -34,7 +34,6 @@ public class Usuario extends BaseEntity implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Rol rol;
-    private String fechaCreacion;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

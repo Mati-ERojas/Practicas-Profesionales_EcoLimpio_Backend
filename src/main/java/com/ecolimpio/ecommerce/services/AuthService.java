@@ -43,7 +43,6 @@ public class AuthService {
                 .nombre(request.getNombre())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .rol(Rol.ADMIN)
-                .fechaCreacion(request.getFechaCreacion())
                 .build();
 
         usuarioRepository.save(usuario);
@@ -59,7 +58,6 @@ public class AuthService {
                 .nombre(request.getNombre())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .rol(Rol.VENTAS)
-                .fechaCreacion(request.getFechaCreacion())
                 .build();
 
         usuarioRepository.save(usuario);

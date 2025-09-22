@@ -13,5 +13,4 @@ public class RegisterRequest {
     String email;
     String password;
     String nombre;
-    String fechaCreacion;
 }
