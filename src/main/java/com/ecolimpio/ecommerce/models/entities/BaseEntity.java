@@ -3,6 +3,7 @@ package com.ecolimpio.ecommerce.models.entities;
 import java.io.Serializable;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
@@ -21,6 +22,7 @@ public abstract class BaseEntity implements Serializable {
     @Id
     protected String id;
 
+    @Column(nullable = false)
     protected boolean habilitado = true;
 
     @PrePersist
