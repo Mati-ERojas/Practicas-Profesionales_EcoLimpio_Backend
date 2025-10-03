@@ -28,7 +28,7 @@ public class ProductoService extends BaseService<Producto, String> {
     private Cloudinary cloudinary;
 
     @Transactional
-    public void updateImagen(String id, MultipartFile archivo) throws Exception {
+    public Producto updateImagen(String id, MultipartFile archivo) throws Exception {
         try {
             Producto producto = productoRepository.findById(id)
                     .orElseThrow(() -> new Exception("Producto no encontrado"));
@@ -41,6 +41,7 @@ public class ProductoService extends BaseService<Producto, String> {
                 producto.setUrlImagen(uploadResult.get("secure_url").toString());
                 producto.setPublicId(uploadResult.get("public_id").toString());
             }
+            return productoRepository.save(producto);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

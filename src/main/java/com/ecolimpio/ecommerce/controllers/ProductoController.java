@@ -31,10 +31,11 @@ public class ProductoController extends BaseController<Producto, String> {
     public ProductoService productoService;
 
     @PatchMapping("/{id}/imagen")
-    public ResponseEntity<String> updateImagen(@PathVariable String id, @RequestParam("archivo") MultipartFile archivo)
+    public ResponseEntity<Producto> updateImagen(@PathVariable String id,
+            @RequestParam("archivo") MultipartFile archivo)
             throws Exception {
-        productoService.updateImagen(id, archivo);
-        return ResponseEntity.ok("Imagen actualizada");
+        Producto producto = productoService.updateImagen(id, archivo);
+        return ResponseEntity.ok(producto);
     }
 
     @PostMapping("/categorias/{idProducto}")
