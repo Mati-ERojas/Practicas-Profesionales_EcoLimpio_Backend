@@ -27,43 +27,20 @@ public class ProductoService extends BaseService<Producto, String> {
     @Autowired
     private Cloudinary cloudinary;
 
-    @Override
     @Transactional
-    public Producto create(Producto producto) throws Exception {
+    public void updateImagen(String id, MultipartFile archivo) throws Exception {
         try {
-            MultipartFile archivo = producto.getArchivo();
+            Producto producto = productoRepository.findById(id)
+                    .orElseThrow(() -> new Exception("Producto no encontrado"));
 
             if (archivo != null && !archivo.isEmpty()) {
+                if (producto.getPublicId() != null) {
+                    cloudinary.uploader().destroy(producto.getPublicId(), ObjectUtils.emptyMap());
+                }
                 Map uploadResult = cloudinary.uploader().upload(archivo.getBytes(), ObjectUtils.emptyMap());
                 producto.setUrlImagen(uploadResult.get("secure_url").toString());
                 producto.setPublicId(uploadResult.get("public_id").toString());
             }
-            return productoRepository.save(producto);
-        } catch (IOException e) {
-            throw new Exception("Error al subir imagen del producto a Clodinary " + e.getMessage());
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    @Override
-    @Transactional
-    public Producto update(Producto productoActualizado) throws Exception {
-        try {
-            MultipartFile nuevoArchivo = productoActualizado.getArchivo();
-
-            if (nuevoArchivo != null && !nuevoArchivo.isEmpty()) {
-                if (productoActualizado.getPublicId() != null && !productoActualizado.getPublicId().isEmpty()) {
-                    cloudinary.uploader().destroy(productoActualizado.getPublicId(), ObjectUtils.emptyMap());
-                }
-                Map uploadResult = cloudinary.uploader().upload(nuevoArchivo.getBytes(), ObjectUtils.emptyMap());
-                productoActualizado.setUrlImagen(uploadResult.get("secure_url").toString());
-                productoActualizado.setPublicId(uploadResult.get("public_id").toString());
-            }
-
-            return productoRepository.save(productoActualizado);
-        } catch (IOException e) {
-            throw new Exception("Error al subir imagen del producto a Clodinary " + e.getMessage());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

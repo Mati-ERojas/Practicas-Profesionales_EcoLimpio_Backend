@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ecolimpio.ecommerce.models.entities.Categoria;
 import com.ecolimpio.ecommerce.models.entities.Producto;
 import com.ecolimpio.ecommerce.services.ProductoService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 @RestController
 @RequestMapping("/productos")
@@ -27,6 +29,13 @@ public class ProductoController extends BaseController<Producto, String> {
 
     @Autowired
     public ProductoService productoService;
+
+    @PatchMapping("/{id}/imagen")
+    public ResponseEntity<String> updateImagen(@PathVariable String id, @RequestParam("archivo") MultipartFile archivo)
+            throws Exception {
+        productoService.updateImagen(id, archivo);
+        return ResponseEntity.ok("Imagen actualizada");
+    }
 
     @PostMapping("/categorias/{idProducto}")
     public Optional<Producto> agregarCategoria(@RequestBody Categoria categoria, @PathVariable String id)
