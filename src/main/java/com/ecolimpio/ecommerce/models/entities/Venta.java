@@ -1,5 +1,7 @@
 package com.ecolimpio.ecommerce.models.entities;
 
+import java.time.LocalDateTime;
+
 import com.ecolimpio.ecommerce.models.entities.enums.Estado;
 
 import jakarta.persistence.Column;
@@ -25,7 +27,7 @@ import lombok.NoArgsConstructor;
 public class Venta extends BaseEntity {
     @Column(unique = true)
     private Integer recibo;
-    private String fecha;
+    private LocalDateTime fecha;
     @Enumerated(EnumType.STRING)
     private Estado estado;
     private Float total;

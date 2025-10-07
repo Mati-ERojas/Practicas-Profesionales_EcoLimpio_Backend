@@ -1,5 +1,7 @@
 package com.ecolimpio.ecommerce.models.entities;
 
+import java.time.LocalDateTime;
+
 import com.ecolimpio.ecommerce.models.entities.enums.TipoMovimiento;
 
 import jakarta.persistence.Entity;
@@ -22,7 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Movimiento extends BaseEntity {
-    private String fecha;
+    private LocalDateTime fecha;
     @Enumerated(EnumType.STRING)
     private TipoMovimiento tipo;
 

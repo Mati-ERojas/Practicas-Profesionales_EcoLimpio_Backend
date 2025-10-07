@@ -1,5 +1,7 @@
 package com.ecolimpio.ecommerce.models.entities;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CierreCaja extends BaseEntity {
     private String codigoCierre;
-    private String fechaHora;
+    private LocalDateTime fechaHora;
     private Float total;
 }
