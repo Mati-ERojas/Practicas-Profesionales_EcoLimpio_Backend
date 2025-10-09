@@ -13,6 +13,14 @@ public interface ProductoRepository extends BaseRepository<Producto, String> {
     List<Producto> findAllByCategoriaId(String idCategoria);
 
     @Query("""
+            SELECT DISTINCT p
+            FROM Producto p
+            WHERE
+                p.habilitado = true AND p.stock > 0
+            """)
+    List<Producto> findByEnabled();
+
+    @Query("""
                 SELECT DISTINCT p
                 FROM Producto p
                 JOIN p.categoria c
