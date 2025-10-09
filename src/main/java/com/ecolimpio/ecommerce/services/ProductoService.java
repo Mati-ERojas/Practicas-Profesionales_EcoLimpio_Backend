@@ -28,6 +28,16 @@ public class ProductoService extends BaseService<Producto, String> {
     private Cloudinary cloudinary;
 
     @Transactional
+    @Override
+    public List<Producto> getAllEnableEntities() throws Exception {
+        try {
+            return productoRepository.findByEnabled();
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Transactional
     public Producto updateImagen(String id, MultipartFile archivo) throws Exception {
         try {
             Producto producto = productoRepository.findById(id)
