@@ -16,11 +16,15 @@ public interface ProductoRepository extends BaseRepository<Producto, String> {
                 SELECT DISTINCT p
                 FROM Producto p
                 JOIN p.categoria c
-                WHERE :search IS NULL
-                    OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :search, '%'))
-                    OR LOWER(p.titulo) LIKE LOWER(CONCAT('%', :search, '%'))
-                    OR LOWER(p.marca) LIKE LOWER(CONCAT('%', :search, '%'))
-                    OR LOWER(c.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
+                WHERE
+                    (:search IS NULL OR
+                        LOWER(p.sku) LIKE LOWER(CONCAT('%', :search, '%')) OR
+                        LOWER(p.titulo) LIKE LOWER(CONCAT('%', :search, '%')) OR
+                        LOWER(p.marca) LIKE LOWER(CONCAT('%', :search, '%')) OR
+                        LOWER(c.nombre) LIKE LOWER(CONCAT('%', :search, '%')))
+                AND p.habilitado = true
+                AND p.stock > 0
             """)
     List<Producto> findBySearch(@Param("search") String search);
+
 }

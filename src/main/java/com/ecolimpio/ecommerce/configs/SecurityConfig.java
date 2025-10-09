@@ -40,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/productos/getEnabled").permitAll()
                         .requestMatchers(HttpMethod.GET, "/categorias/getEnabled").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/productos/categorias/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/productos/buscar-productos").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
