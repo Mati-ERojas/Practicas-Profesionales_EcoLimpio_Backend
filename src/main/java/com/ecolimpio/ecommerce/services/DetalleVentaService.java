@@ -9,6 +9,7 @@ import com.ecolimpio.ecommerce.models.entities.DetalleVenta;
 import com.ecolimpio.ecommerce.models.entities.Producto;
 import com.ecolimpio.ecommerce.models.entities.Venta;
 import com.ecolimpio.ecommerce.repositories.DetalleVentaRepository;
+import com.ecolimpio.ecommerce.repositories.ProductoRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -20,6 +21,25 @@ public class DetalleVentaService extends BaseService<DetalleVenta, String> {
 
     @Autowired
     private DetalleVentaRepository detalleVentaRepository;
+    @Autowired
+    private ProductoRepository productoRepository;
+
+    @Transactional
+    @Override
+    public DetalleVenta create(DetalleVenta detalleVenta) {
+        Producto producto = productoRepository.findById(detalleVenta.getProducto().getId())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        int nuevoStock = producto.getStock() - detalleVenta.getCantidad();
+        if (nuevoStock < 0) {
+            throw new RuntimeException("Stock insuficiente para el producto: " + producto.getTitulo());
+        }
+
+        producto.setStock(nuevoStock);
+        productoRepository.save(producto);
+
+        return detalleVentaRepository.save(detalleVenta);
+    }
 
     @Transactional
     public DetalleVenta agregarVenta(String idDetalleVenta, Venta venta) throws Exception {
