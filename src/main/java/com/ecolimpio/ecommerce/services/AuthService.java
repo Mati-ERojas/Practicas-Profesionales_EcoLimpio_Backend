@@ -1,8 +1,10 @@
 package com.ecolimpio.ecommerce.services;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,52 +20,59 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final AuthenticationManager authenticationManager;
-    private final UsuarioRepository usuarioRepository;
-    private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
+        private final AuthenticationManager authenticationManager;
+        private final UsuarioRepository usuarioRepository;
+        private final JwtService jwtService;
+        private final PasswordEncoder passwordEncoder;
 
-    public AuthResponse login(LoginRequest request) {
-        authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        UserDetails usuario = usuarioRepository.findByEmail(request.getEmail()).orElseThrow();
-        String token = jwtService.getToken(usuario);
-        return AuthResponse.builder()
-                .token(token)
-                .build();
-    }
+        public AuthResponse login(LoginRequest request) {
+                authenticationManager
+                                .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
+                                                request.getPassword()));
+                UserDetails usuario = usuarioRepository.findByEmail(request.getEmail())
+                                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-    public boolean validarToken(String token) {
-        return !jwtService.isTokenExpired(token);
-    }
+                if (!usuario.isEnabled()) {
+                        throw new DisabledException("La cuenta está deshabilitada.");
+                }
 
-    public AuthResponse registerAdmin(RegisterRequest request) {
-        Usuario usuario = Usuario.builder()
-                .email(request.getEmail())
-                .nombre(request.getNombre())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .rol(Rol.ADMIN)
-                .build();
+                String token = jwtService.getToken(usuario);
+                return AuthResponse.builder()
+                                .token(token)
+                                .build();
+        }
 
-        usuarioRepository.save(usuario);
+        public boolean validarToken(String token) {
+                return !jwtService.isTokenExpired(token);
+        }
 
-        return AuthResponse.builder()
-                .token(jwtService.getToken(usuario))
-                .build();
-    }
+        public AuthResponse registerAdmin(RegisterRequest request) {
+                Usuario usuario = Usuario.builder()
+                                .email(request.getEmail())
+                                .nombre(request.getNombre())
+                                .password(passwordEncoder.encode(request.getPassword()))
+                                .rol(Rol.ADMIN)
+                                .build();
 
-    public AuthResponse registerEmpleado(RegisterRequest request) {
-        Usuario usuario = Usuario.builder()
-                .email(request.getEmail())
-                .nombre(request.getNombre())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .rol(Rol.VENTAS)
-                .build();
+                usuarioRepository.save(usuario);
 
-        usuarioRepository.save(usuario);
+                return AuthResponse.builder()
+                                .token(jwtService.getToken(usuario))
+                                .build();
+        }
 
-        return AuthResponse.builder()
-                .token(jwtService.getToken(usuario))
-                .build();
-    }
+        public AuthResponse registerEmpleado(RegisterRequest request) {
+                Usuario usuario = Usuario.builder()
+                                .email(request.getEmail())
+                                .nombre(request.getNombre())
+                                .password(passwordEncoder.encode(request.getPassword()))
+                                .rol(Rol.VENTAS)
+                                .build();
+
+                usuarioRepository.save(usuario);
+
+                return AuthResponse.builder()
+                                .token(jwtService.getToken(usuario))
+                                .build();
+        }
 }

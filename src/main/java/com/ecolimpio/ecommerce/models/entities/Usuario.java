@@ -75,6 +75,6 @@ public class Usuario extends BaseEntity implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isEnabled() {
-        return true;
+        return habilitado;
     }
 }

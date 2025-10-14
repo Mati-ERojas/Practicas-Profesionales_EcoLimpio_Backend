@@ -29,6 +29,7 @@ public class VentaService extends BaseService<Venta, String> {
             Integer ultimoRecibo = ventaRepository.findMaxRecibo();
             venta.setRecibo(ultimoRecibo + 1);
         }
+        venta.setEstado(Estado.ABIERTO);
         return ventaRepository.save(venta);
     }
 
