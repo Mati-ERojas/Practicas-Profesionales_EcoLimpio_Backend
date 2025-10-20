@@ -2,6 +2,8 @@ package com.ecolimpio.ecommerce.services;
 
 import java.util.List;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,8 +81,8 @@ public class MovimientoService extends BaseService<Movimiento, String> {
             String skuNombre,
             Float totalMovMax,
             Float totalMovMin,
-            String fechaMin,
-            String fechaMax) throws Exception {
+            LocalDateTime fechaMin,
+            LocalDateTime fechaMax) throws Exception {
         try {
             return movimientoRepository.findAllByParams(idUsuario, tipoMovimiento, skuNombre,
                     totalMovMax, totalMovMin, fechaMin, fechaMax);

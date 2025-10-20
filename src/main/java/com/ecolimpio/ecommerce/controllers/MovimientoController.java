@@ -3,6 +3,8 @@ package com.ecolimpio.ecommerce.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,6 +66,7 @@ public class MovimientoController extends BaseController<Movimiento, String> {
             @RequestParam(required = false) String fechaMin,
             @RequestParam(required = false) String fechaMax)
             throws Exception {
+
         TipoMovimiento tipoMov = (tipoMovimiento == null || tipoMovimiento.equalsIgnoreCase("null")
                 ? null
                 : TipoMovimiento.valueOf(tipoMovimiento.toUpperCase()));
@@ -74,8 +77,16 @@ public class MovimientoController extends BaseController<Movimiento, String> {
                 ? null
                 : Float.parseFloat(totalMovimientoMax));
 
+        LocalDateTime DateFechaMin = (fechaMin != null)
+                ? LocalDateTime.parse(fechaMin)
+                : null;
+
+        LocalDateTime DateFechaMax = (fechaMax != null)
+                ? LocalDateTime.parse(fechaMax)
+                : null;
+
         List<Movimiento> movimientos = movimientoService.listarPorParametros(idUsuario, tipoMov, skuNombre,
-                totalMovMax, totalMovMin, fechaMin, fechaMax);
+                totalMovMax, totalMovMin, DateFechaMin, DateFechaMax);
         return ResponseEntity.ok(movimientos);
     }
 }

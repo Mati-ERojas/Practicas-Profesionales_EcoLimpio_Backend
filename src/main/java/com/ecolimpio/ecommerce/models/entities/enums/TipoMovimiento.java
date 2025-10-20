@@ -8,5 +8,5 @@ public enum TipoMovimiento {
     ROBO,
     ROTURA,
     VENCIMIENTO,
-    CIERRACAJA
+    CIERRECAJA
 }

@@ -2,6 +2,8 @@ package com.ecolimpio.ecommerce.repositories;
 
 import java.util.List;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,8 +25,8 @@ public interface MovimientoRepository extends BaseRepository<Movimiento, String>
                     AND (:skuNombre IS NULL OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :skuNombre, '%'))
                         OR LOWER(p.titulo) LIKE LOWER(CONCAT('%', :skuNombre, '%')))
                     AND (:tipoMovimiento IS NULL OR m.tipo = :tipoMovimiento)
-                    AND (:totalMovMax IS NULL OR m.total <= :totalMovMax)
-                    AND (:totalMovMin IS NULL OR m.total >= :totalMovMin)
+                    AND m.total <= COALESCE(:totalMovMax, m.total)
+                    AND m.total >= COALESCE(:totalMovMin, m.total)
                     AND (:fechaMin IS NULL OR m.fecha >= :fechaMin)
                     AND (:fechaMax IS NULL OR m.fecha <= :fechaMax)
             """)
@@ -33,6 +35,6 @@ public interface MovimientoRepository extends BaseRepository<Movimiento, String>
             @Param("skuNombre") String skuNombre,
             @Param("totalMovMax") Float totalMovMax,
             @Param("totalMovMin") Float totalMovMin,
-            @Param("fechaMin") String fechaMin,
-            @Param("fechaMax") String fechaMax);
+            @Param("fechaMin") LocalDateTime fechaMin,
+            @Param("fechaMax") LocalDateTime fechaMax);
 }
