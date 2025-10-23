@@ -1,14 +1,21 @@
 package com.ecolimpio.ecommerce.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecolimpio.ecommerce.models.dtos.DetalleVentaDTO;
+import com.ecolimpio.ecommerce.models.dtos.VentaConDetallesDTO;
 import com.ecolimpio.ecommerce.models.entities.CierreCaja;
+import com.ecolimpio.ecommerce.models.entities.DetalleVenta;
 import com.ecolimpio.ecommerce.models.entities.Usuario;
 import com.ecolimpio.ecommerce.models.entities.Venta;
 import com.ecolimpio.ecommerce.models.entities.enums.Estado;
+import com.ecolimpio.ecommerce.repositories.CierreCajaRepository;
+import com.ecolimpio.ecommerce.repositories.DetalleVentaRepository;
 import com.ecolimpio.ecommerce.repositories.VentaRepository;
 
 import jakarta.transaction.Transactional;
@@ -21,6 +28,10 @@ public class VentaService extends BaseService<Venta, String> {
 
     @Autowired
     private VentaRepository ventaRepository;
+    @Autowired
+    private DetalleVentaRepository detalleVentaRepository;
+    @Autowired
+    private CierreCajaRepository cierreCajaRepository;
 
     @Override
     @Transactional
@@ -34,8 +45,45 @@ public class VentaService extends BaseService<Venta, String> {
     }
 
     @Transactional
-    public List<Venta> listarVentasAbiertas() {
-        return ventaRepository.findByEstado(Estado.ABIERTO);
+    public List<VentaConDetallesDTO> listarVentasAbiertas() throws Exception {
+        try {
+            List<DetalleVenta> detalles = detalleVentaRepository.findDetallesByVentaAbierta();
+
+            // Agrupar detalles por venta
+            Map<Venta, List<DetalleVenta>> detallesPorVenta = detalles.stream()
+                    .collect(Collectors.groupingBy(DetalleVenta::getVenta));
+
+            // Transformar a DTOs
+            return detallesPorVenta.entrySet().stream().map(entry -> {
+                Venta venta = entry.getKey();
+                List<DetalleVenta> detallesVenta = entry.getValue();
+
+                // Mapear detalles a DTOs
+                List<DetalleVentaDTO> detallesDTO = detallesVenta.stream().map(d -> {
+                    DetalleVentaDTO dto = new DetalleVentaDTO();
+                    dto.setId(d.getId());
+                    dto.setProducto(d.getProducto());
+                    dto.setCantidad(d.getCantidad());
+                    dto.setSubtotal(d.getSubtotal());
+                    return dto;
+                }).toList();
+
+                // Mapear venta con sus detalles
+                VentaConDetallesDTO ventaDTO = new VentaConDetallesDTO();
+                ventaDTO.setId(venta.getId());
+                ventaDTO.setRecibo(venta.getRecibo());
+                ventaDTO.setFecha(venta.getFecha());
+                ventaDTO.setEstado(venta.getEstado());
+                ventaDTO.setTotal(venta.getTotal());
+                ventaDTO.setVendedor(venta.getVendedor());
+                ventaDTO.setDetalles(detallesDTO);
+
+                return ventaDTO;
+            }).toList();
+
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
     @Transactional
@@ -60,6 +108,9 @@ public class VentaService extends BaseService<Venta, String> {
             Venta venta = ventaRepository.findById(idVenta).orElse(null);
             if (venta != null) {
                 venta.setCierreCaja(cierreCaja);
+                venta.setEstado(com.ecolimpio.ecommerce.models.entities.enums.Estado.CERRADO);
+                cierreCaja.setTotal(cierreCaja.getTotal() + venta.getTotal());
+                cierreCajaRepository.save(cierreCaja);
                 ventaRepository.save(venta);
                 return venta;
             } else {

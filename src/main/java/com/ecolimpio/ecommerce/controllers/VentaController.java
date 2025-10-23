@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecolimpio.ecommerce.models.dtos.VentaConDetallesDTO;
 import com.ecolimpio.ecommerce.models.entities.CierreCaja;
 import com.ecolimpio.ecommerce.models.entities.Usuario;
 import com.ecolimpio.ecommerce.models.entities.Venta;
@@ -28,8 +29,8 @@ public class VentaController extends BaseController<Venta, String> {
     public VentaService ventaService;
 
     @GetMapping("/abiertas")
-    public ResponseEntity<List<Venta>> listarVentasAbiertas() {
-        List<Venta> ventas = ventaService.listarVentasAbiertas();
+    public ResponseEntity<List<VentaConDetallesDTO>> listarVentasAbiertas() throws Exception {
+        List<VentaConDetallesDTO> ventas = ventaService.listarVentasAbiertas();
         return ResponseEntity.ok(ventas);
     }
 
