@@ -39,9 +39,9 @@ public class ProductoController extends BaseController<Producto, String> {
     }
 
     @PostMapping("/categorias/{idProducto}")
-    public Optional<Producto> agregarCategoria(@RequestBody Categoria categoria, @PathVariable String id)
+    public Optional<Producto> agregarCategoria(@RequestBody Categoria categoria, @PathVariable String idProducto)
             throws Exception {
-        Producto producto = productoService.agregarCategoria(id, categoria);
+        Producto producto = productoService.agregarCategoria(idProducto, categoria);
         return Optional.ofNullable(producto);
     }
 

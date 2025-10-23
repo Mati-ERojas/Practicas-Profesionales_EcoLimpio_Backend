@@ -32,15 +32,16 @@ public class MovimientoController extends BaseController<Movimiento, String> {
     public MovimientoService movimientoService;
 
     @PostMapping("/usuarios/{idMovimiento}")
-    public Optional<Movimiento> agregarUsuario(@RequestBody Usuario usuario, @PathVariable String id) throws Exception {
-        Movimiento movimiento = movimientoService.agregarUsuario(id, usuario);
+    public Optional<Movimiento> agregarUsuario(@RequestBody Usuario usuario, @PathVariable String idMovimiento)
+            throws Exception {
+        Movimiento movimiento = movimientoService.agregarUsuario(idMovimiento, usuario);
         return Optional.ofNullable(movimiento);
     }
 
     @PostMapping("/productos/{idMovimiento}")
-    public Optional<Movimiento> agregarProducto(@RequestBody Producto producto, @PathVariable String id)
+    public Optional<Movimiento> agregarProducto(@RequestBody Producto producto, @PathVariable String idMovimiento)
             throws Exception {
-        Movimiento movimiento = movimientoService.agregarProducto(id, producto);
+        Movimiento movimiento = movimientoService.agregarProducto(idMovimiento, producto);
         return Optional.ofNullable(movimiento);
     }
 

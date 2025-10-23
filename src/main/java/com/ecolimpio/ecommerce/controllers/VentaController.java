@@ -35,15 +35,16 @@ public class VentaController extends BaseController<Venta, String> {
     }
 
     @PostMapping("/usuarios/{idVenta}")
-    public Optional<Venta> agregarVendedor(@RequestBody Usuario usuario, @PathVariable String id) throws Exception {
-        Venta venta = ventaService.agregarVendedor(id, usuario);
+    public Optional<Venta> agregarVendedor(@RequestBody Usuario usuario, @PathVariable String idVenta)
+            throws Exception {
+        Venta venta = ventaService.agregarVendedor(idVenta, usuario);
         return Optional.ofNullable(venta);
     }
 
     @PostMapping("/cierres-caja/{idVenta}")
-    public Optional<Venta> agregarCierreCaja(@RequestBody CierreCaja cierreCaja, @PathVariable String id)
+    public Optional<Venta> agregarCierreCaja(@RequestBody CierreCaja cierreCaja, @PathVariable String idVenta)
             throws Exception {
-        Venta venta = ventaService.agregarCierreCaja(id, cierreCaja);
+        Venta venta = ventaService.agregarCierreCaja(idVenta, cierreCaja);
         return Optional.ofNullable(venta);
     }
 
