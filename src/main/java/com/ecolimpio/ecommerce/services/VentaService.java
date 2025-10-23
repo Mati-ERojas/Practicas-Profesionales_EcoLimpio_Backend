@@ -14,7 +14,6 @@ import com.ecolimpio.ecommerce.models.entities.DetalleVenta;
 import com.ecolimpio.ecommerce.models.entities.Usuario;
 import com.ecolimpio.ecommerce.models.entities.Venta;
 import com.ecolimpio.ecommerce.models.entities.enums.Estado;
-import com.ecolimpio.ecommerce.repositories.CierreCajaRepository;
 import com.ecolimpio.ecommerce.repositories.DetalleVentaRepository;
 import com.ecolimpio.ecommerce.repositories.VentaRepository;
 
@@ -30,8 +29,6 @@ public class VentaService extends BaseService<Venta, String> {
     private VentaRepository ventaRepository;
     @Autowired
     private DetalleVentaRepository detalleVentaRepository;
-    @Autowired
-    private CierreCajaRepository cierreCajaRepository;
 
     @Override
     @Transactional
@@ -109,8 +106,6 @@ public class VentaService extends BaseService<Venta, String> {
             if (venta != null) {
                 venta.setCierreCaja(cierreCaja);
                 venta.setEstado(com.ecolimpio.ecommerce.models.entities.enums.Estado.CERRADO);
-                cierreCaja.setTotal(cierreCaja.getTotal() + venta.getTotal());
-                cierreCajaRepository.save(cierreCaja);
                 ventaRepository.save(venta);
                 return venta;
             } else {
