@@ -91,10 +91,7 @@ public class ProductoService extends BaseService<Producto, String> {
     @Transactional
     public List<Producto> listarPorCategoria(String idCategoria) throws Exception {
         try {
-            return productoRepository.findAllByCategoriaId(idCategoria)
-                    .stream()
-                    .filter(p -> p.getStock() != null && p.getStock() > 0)
-                    .toList();
+            return productoRepository.findByCategoriaAndStock(idCategoria);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
