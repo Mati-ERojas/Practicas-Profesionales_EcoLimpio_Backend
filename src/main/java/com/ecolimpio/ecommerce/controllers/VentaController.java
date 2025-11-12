@@ -34,6 +34,11 @@ public class VentaController extends BaseController<Venta, String> {
         return ResponseEntity.ok(ventas);
     }
 
+    @GetMapping("/con-detalles/{id}")
+    public ResponseEntity<VentaConDetallesDTO> getVentaConDetallesById(@PathVariable String id) throws Exception {
+        return ResponseEntity.ok(ventaService.getVentaDTOById(id));
+    }
+
     @PostMapping("/usuarios/{idVenta}")
     public Optional<Venta> agregarVendedor(@RequestBody Usuario usuario, @PathVariable String idVenta)
             throws Exception {

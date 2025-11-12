@@ -27,6 +27,7 @@ public class Producto extends BaseEntity {
     private String titulo;
     private Float precioCompra;
     private Float precioVenta;
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
     private String marca;
     private Integer stock;

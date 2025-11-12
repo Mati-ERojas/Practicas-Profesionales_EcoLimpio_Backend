@@ -42,6 +42,36 @@ public class VentaService extends BaseService<Venta, String> {
     }
 
     @Transactional
+    public VentaConDetallesDTO getVentaDTOById(String id) throws Exception {
+        try {
+            List<DetalleVenta> detalles = detalleVentaRepository.findAllByVentaId(id);
+
+            List<DetalleVentaDTO> detalleDTOs = detalles.stream().map(d -> DetalleVentaDTO.builder()
+                    .id(d.getId())
+                    .producto(d.getProducto())
+                    .cantidad(d.getCantidad())
+                    .subtotal(d.getSubtotal())
+                    .build()).toList();
+
+            Venta venta = ventaRepository.findById(id).orElse(null);
+
+            VentaConDetallesDTO ventaDTO = VentaConDetallesDTO.builder()
+                    .id(venta.getId())
+                    .recibo(venta.getRecibo())
+                    .fecha(venta.getFecha())
+                    .estado(venta.getEstado())
+                    .total(venta.getTotal())
+                    .vendedor(venta.getVendedor())
+                    .detalles(detalleDTOs)
+                    .build();
+
+            return ventaDTO;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Transactional
     public List<VentaConDetallesDTO> listarVentasAbiertas() throws Exception {
         try {
             List<DetalleVenta> detalles = detalleVentaRepository.findDetallesByVentaAbierta();
