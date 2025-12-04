@@ -17,19 +17,19 @@ public interface MovimientoRepository extends BaseRepository<Movimiento, String>
 
     List<Movimiento> findAllByProductoId(String idProducto);
 
-    @Query("""
-                SELECT DISTINCT m
-                FROM Movimiento m
-                JOIN m.producto p
-                WHERE (:idUsuario IS NULL OR m.usuario.id = :idUsuario)
-                    AND (:skuNombre IS NULL OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :skuNombre, '%'))
-                        OR LOWER(p.titulo) LIKE LOWER(CONCAT('%', :skuNombre, '%')))
-                    AND (:tipoMovimiento IS NULL OR m.tipo = :tipoMovimiento)
-                    AND m.total <= COALESCE(:totalMovMax, m.total)
-                    AND m.total >= COALESCE(:totalMovMin, m.total)
-                    AND (:fechaMin IS NULL OR m.fecha >= :fechaMin)
-                    AND (:fechaMax IS NULL OR m.fecha <= :fechaMax)
-            """)
+        @Query("""
+        SELECT DISTINCT m
+        FROM Movimiento m
+        LEFT JOIN m.producto p
+        WHERE (:idUsuario IS NULL OR m.usuario.id = :idUsuario)
+            AND (:skuNombre IS NULL OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :skuNombre, '%'))
+                OR LOWER(p.titulo) LIKE LOWER(CONCAT('%', :skuNombre, '%')))
+            AND (:tipoMovimiento IS NULL OR m.tipo = :tipoMovimiento)
+            AND m.total <= COALESCE(:totalMovMax, m.total)
+            AND m.total >= COALESCE(:totalMovMin, m.total)
+            AND (:fechaMin IS NULL OR m.fecha >= :fechaMin)
+            AND (:fechaMax IS NULL OR m.fecha <= :fechaMax)
+    """)
     List<Movimiento> findAllByParams(@Param("idUsuario") String idUsuario,
             @Param("tipoMovimiento") TipoMovimiento tipoMovimiento,
             @Param("skuNombre") String skuNombre,

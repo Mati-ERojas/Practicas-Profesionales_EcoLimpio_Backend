@@ -42,13 +42,11 @@ public class Usuario extends BaseEntity implements UserDetails {
         return List.of(new SimpleGrantedAuthority((rol.name())));
     }
 
-    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
 
-    @JsonIgnore
     @Override
     public String getPassword() {
         return password;

@@ -36,6 +36,29 @@ public class UsuarioService extends BaseService<Usuario, String> {
         }
     }
 
+    @Override
+public Usuario update(Usuario usuario) throws Exception {
+    try {
+        Usuario oldUser = usuarioRepository.findById(usuario.getId())
+                .orElseThrow(() -> new Exception("Usuario no encontrado"));
+
+        // Actualizar campos editables
+        oldUser.setEmail(usuario.getEmail());
+        oldUser.setNombre(usuario.getNombre());
+        oldUser.setRol(usuario.getRol());
+
+        // Actualizar password solo si viene una nueva
+        if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
+            oldUser.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        }
+
+        return usuarioRepository.save(oldUser);
+    } catch (Exception e) {
+        throw new Exception(e.getMessage());
+    }
+}
+
+
     @Transactional
     public Usuario findByEmail(String email) throws Exception {
         try {
