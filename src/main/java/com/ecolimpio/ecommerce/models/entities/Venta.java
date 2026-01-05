@@ -37,6 +37,6 @@ public class Venta extends BaseEntity {
     private Usuario vendedor;
 
     @ManyToOne
-    @JoinColumn(name = "cierreCaja_id")
+    @JoinColumn(name = "cierreCaja_id", nullable = true)
     private CierreCaja cierreCaja;
 }

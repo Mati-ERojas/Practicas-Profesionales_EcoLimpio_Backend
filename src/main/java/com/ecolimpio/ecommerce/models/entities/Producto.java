@@ -34,7 +34,7 @@ public class Producto extends BaseEntity {
     private Integer porcentajeOferta;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id")
+    @JoinColumn(name = "categoria_id", nullable = true)
     private Categoria categoria;
 
     // Manejo de imagen (Cloudinary):

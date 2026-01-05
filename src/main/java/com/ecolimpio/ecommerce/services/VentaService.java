@@ -163,4 +163,11 @@ public class VentaService extends BaseService<Venta, String> {
             throw new Exception(e.getMessage());
         }
     }
+
+    @Override
+    @Transactional
+    public void delete(String id) {
+        detalleVentaRepository.deleteAllByVentaId(id);
+        ventaRepository.deleteById(id);
+    }
 }

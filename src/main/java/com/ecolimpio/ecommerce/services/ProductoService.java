@@ -11,6 +11,8 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.ecolimpio.ecommerce.models.entities.Categoria;
 import com.ecolimpio.ecommerce.models.entities.Producto;
+import com.ecolimpio.ecommerce.repositories.DetalleVentaRepository;
+import com.ecolimpio.ecommerce.repositories.MovimientoRepository;
 import com.ecolimpio.ecommerce.repositories.ProductoRepository;
 
 import jakarta.transaction.Transactional;
@@ -23,6 +25,13 @@ public class ProductoService extends BaseService<Producto, String> {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private DetalleVentaRepository detalleVentaRepository;
+
+    @Autowired
+    private MovimientoRepository movimientoRepository;
+
     @Autowired
     private Cloudinary cloudinary;
 
@@ -66,6 +75,10 @@ public class ProductoService extends BaseService<Producto, String> {
             if (producto.getPublicId() != null && !producto.getPublicId().isEmpty()) {
                 cloudinary.uploader().destroy(producto.getPublicId(), ObjectUtils.emptyMap());
             }
+
+            detalleVentaRepository.desasociarProducto(id);
+            movimientoRepository.deleteAllByProductoId(id);
+
             productoRepository.deleteById(id);
         } catch (Exception e) {
             throw new Exception(e.getMessage());

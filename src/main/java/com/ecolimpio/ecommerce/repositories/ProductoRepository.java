@@ -2,6 +2,7 @@ package com.ecolimpio.ecommerce.repositories;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,6 @@ public interface ProductoRepository extends BaseRepository<Producto, String> {
             AND p.stock > 0
             """)
     List<Producto> findByCategoriaAndStock(@Param("idCategoria") String idCategoria);
-
 
     @Query("""
             SELECT DISTINCT p
@@ -44,4 +44,11 @@ public interface ProductoRepository extends BaseRepository<Producto, String> {
             """)
     List<Producto> findBySearch(@Param("search") String search);
 
+    @Modifying
+    @Query("""
+            UPDATE Producto p
+            SET p.categoria = null
+            WHERE p.categoria.id = :categoriaId
+            """)
+    void desasociarCategoria(@Param("categoriaId") String categoriaId);
 }

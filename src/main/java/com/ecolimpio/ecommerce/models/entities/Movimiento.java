@@ -43,7 +43,7 @@ public class Movimiento extends BaseEntity {
     private Float total;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = true)
     private Usuario usuario;
 
     @ManyToOne

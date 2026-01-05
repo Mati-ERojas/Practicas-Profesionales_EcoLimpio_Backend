@@ -23,7 +23,7 @@ public class DetalleVenta extends BaseEntity {
     private Venta venta;
 
     @ManyToOne
-    @JoinColumn(name = "producto_id")
+    @JoinColumn(name = "producto_id", nullable = true)
     private Producto producto;
 
     private Integer cantidad;

@@ -5,7 +5,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ecolimpio.ecommerce.models.entities.Usuario;
+import com.ecolimpio.ecommerce.repositories.MovimientoRepository;
 import com.ecolimpio.ecommerce.repositories.UsuarioRepository;
+import com.ecolimpio.ecommerce.repositories.VentaRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -20,6 +22,10 @@ public class UsuarioService extends BaseService<Usuario, String> {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private MovimientoRepository movimientoRepository;
+    @Autowired
+    private VentaRepository ventaRepository;
 
     @Override
     public Usuario create(Usuario usuario) throws Exception {
@@ -37,27 +43,40 @@ public class UsuarioService extends BaseService<Usuario, String> {
     }
 
     @Override
-public Usuario update(Usuario usuario) throws Exception {
-    try {
-        Usuario oldUser = usuarioRepository.findById(usuario.getId())
-                .orElseThrow(() -> new Exception("Usuario no encontrado"));
+    public Usuario update(Usuario usuario) throws Exception {
+        try {
+            Usuario oldUser = usuarioRepository.findById(usuario.getId())
+                    .orElseThrow(() -> new Exception("Usuario no encontrado"));
 
-        // Actualizar campos editables
-        oldUser.setEmail(usuario.getEmail());
-        oldUser.setNombre(usuario.getNombre());
-        oldUser.setRol(usuario.getRol());
+            // Actualizar campos editables
+            oldUser.setEmail(usuario.getEmail());
+            oldUser.setNombre(usuario.getNombre());
+            oldUser.setRol(usuario.getRol());
 
-        // Actualizar password solo si viene una nueva
-        if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
-            oldUser.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            // Actualizar password solo si viene una nueva
+            if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
+                oldUser.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            }
+
+            return usuarioRepository.save(oldUser);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
-
-        return usuarioRepository.save(oldUser);
-    } catch (Exception e) {
-        throw new Exception(e.getMessage());
     }
-}
 
+    @Override
+    @Transactional
+    public void delete(String id) throws Exception {
+        try {
+            // Desasociar usuario de movimientos antes de eliminar
+            movimientoRepository.desasociarUsuario(id);
+            // Desasociar usuario de ventas antes de eliminar
+            ventaRepository.desasociarVendedor(id);
+            super.delete(id);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 
     @Transactional
     public Usuario findByEmail(String email) throws Exception {

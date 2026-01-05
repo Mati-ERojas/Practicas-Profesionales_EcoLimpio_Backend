@@ -74,4 +74,17 @@ public class CierreCajaService extends BaseService<CierreCaja, String> {
             throw new Exception(e.getMessage());
         }
     }
+
+    @Override
+    @Transactional
+    public void delete(String id) throws Exception {
+        try {
+            // Desasociar ventas del cierre de caja
+            ventaRepository.desasociarCierreCaja(id);
+            // Eliminar cierre de caja
+            super.delete(id);
+        } catch (Exception e) {
+            throw new Exception("Error al eliminar cierre de caja: " + e.getMessage());
+        }
+    }
 }
